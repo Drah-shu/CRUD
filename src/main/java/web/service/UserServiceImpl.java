@@ -17,15 +17,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
     @Transactional
     @Override
     public boolean add(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(user);
         return true;
-
     }
 
     @Transactional(readOnly = true)

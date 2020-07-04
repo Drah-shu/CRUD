@@ -2,6 +2,7 @@ package web.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,16 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "lastname")
+    private String lastName;
+
+
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "email")
+    private String email;
+
     @Transient
     private String passwordConfirm;
 
@@ -29,15 +40,44 @@ public class User implements UserDetails {
 
     public User() { }
 
+
     public User(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    public User(long id, String name, String password) {
+    public User(long id, String name, String password, String lastName, Integer age, String email, Set<Role> roles) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.roles = roles;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {

@@ -9,15 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 import web.dao.UserDao;
 import web.model.User;
 
-@Service
+@Service("userDetailServiceImpl")
 @Transactional
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    @Autowired
-    UserDao userDao;
+
+    private UserDao userDao;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserDetailServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {

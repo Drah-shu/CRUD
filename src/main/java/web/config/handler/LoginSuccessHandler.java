@@ -20,6 +20,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Autowired
     UserService userService;
 
+    @Autowired
+    public LoginSuccessHandler(UserService userService) {
+        this.userService = userService;
+    }
+
+    public LoginSuccessHandler() {
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
