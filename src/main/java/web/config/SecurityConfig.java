@@ -1,6 +1,7 @@
 package web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,13 +15,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import web.config.handler.LoginSuccessHandler;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    @Qualifier("userDetailServiceImpl")
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    public SecurityConfig(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,5 +75,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     }
-
 }

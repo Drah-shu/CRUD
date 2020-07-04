@@ -1,107 +1,83 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import web.model.Role;
 import web.model.User;
 import web.service.RoleService;
 import web.service.UserService;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
 public class HelloController {
-
-	@Autowired
 	private UserService userService;
-
-	@Autowired
 	private RoleService roleService;
 
-	@GetMapping("")
-	public String getAllUsers (ModelMap model) {
-		List <User> theCustomers = userService.listUsers();
-		model.addAttribute("users", theCustomers);
-		return "admin/listusers";
+	@Autowired
+	public HelloController(UserService userService, RoleService roleService) {
+		this.userService = userService;
+		this.roleService = roleService;
 	}
 
-	@GetMapping("add")
-	public String loadFormPage(Model model) {
-		return "admin/add";
+	@GetMapping
+	public ModelAndView mainAdminControllerGet(Authentication auth){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("authUser",auth.getPrincipal());
+		modelAndView.addObject("users",userService.listUsers());
+		modelAndView.addObject("userEmail",((User) auth.getPrincipal()).getEmail());
+		modelAndView.addObject("user", new User());
+		modelAndView.addObject("rolesAuth",((User) auth.getPrincipal()).getRoles()
+				.stream().map(Objects::toString).collect(Collectors.joining(" ")));
+		modelAndView.setViewName("admin/listusers");
+		return modelAndView;
 	}
 
-	@PostMapping("add")
-	public String add(@ModelAttribute("user") User user,
-							HttpServletRequest request,
-							HttpSession session ) {
-		Set<Role> roles = user.getRoles();
-		String admin = request.getParameter("admin");
-		String usver = request.getParameter("user");
-
-		if (admin != null) {
-			roles.add(roleService.getRole("ADMIN"));
-		}
-		if (usver != null) {
-			roles.add(roleService.getRole("USER"));
-		}
-
-		if (roles.size() == 0) {
-			session.setAttribute("status","не выбрана");
-			return "redirect:/admin";
-		}
-
-		user.setRoles(roles);
-		if (userService.add(user)){
-			return "redirect:/admin";
-		} else {
-			return "redirect:/admin";
-		}
-
+	@PostMapping("/add")
+	public ModelAndView addUserControllerPost(@ModelAttribute("user") @Valid User user,
+											  @RequestParam(value = "rolesFromHtml") String rolesFromHtml) {
+		ModelAndView mv = new ModelAndView();
+		user.setRoles(getSetRoles(rolesFromHtml));
+		userService.add(user);
+		mv.setViewName("redirect:/admin");
+		return mv;
 	}
 
-	@GetMapping("edit")
-	public String editForm(Model model) {
-		return "admin/edit";
-	}
-
-	@PostMapping("edit")
-	public String editUser(@ModelAttribute("user") User user,
-								 HttpServletRequest request,
-								 HttpSession session ) {
-		Set<Role> roles = user.getRoles();
-		String admin = request.getParameter("admin");
-		String usver = request.getParameter("user");
-
-		if (admin != null) {
-			roles.add(roleService.getRole("ADMIN"));
-		}
-		if (usver != null) {
-			roles.add(roleService.getRole("USER"));
-		}
-		if (roles.size() == 0) {
-			session.setAttribute("status","Не выбрана");
-			return "redirect:/admin";
-		}
-
-		user.setRoles(roles);
+	@PostMapping("/edit")
+	public ModelAndView editUserControllerPost(@ModelAttribute @Valid User user,
+											   @RequestParam(value = "rolesFromHtml") String rolesFromHtml) {
+		ModelAndView mv = new ModelAndView();
+		user.setRoles(getSetRoles(rolesFromHtml));
 		userService.update(user);
-		return "redirect:/admin";
+		mv.setViewName("redirect:/admin");
+		return mv;
 	}
 
-	@GetMapping("delete")
-	public String deleteGet(ModelMap map) {
-		return "admin/delete";
-	}
-
-	@PostMapping("delete")
-	public String deletePost(@RequestParam("id") Long id) {
+	@PostMapping("/delete/{id}")
+	public String deleteUser(@PathVariable("id") Long id){
 		userService.delete(id);
 		return "redirect:/admin";
+	}
+
+	public Set<Role> getSetRoles(String role){
+		Set<Role> userRoles = new HashSet<>();
+		if (role.equals("user")) {
+			userRoles.add(roleService.getRole("USER"));
+		}
+		if (role.equals("admin")) {
+			userRoles.add(roleService.getRole("ADMIN"));
+		}
+		if (role.equals("adminAndUser")) {
+			userRoles.add(roleService.getRole("ADMIN"));
+			userRoles.add(roleService.getRole("USER"));
+		}
+		return userRoles;
 	}
 }

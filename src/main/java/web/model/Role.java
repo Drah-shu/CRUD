@@ -7,8 +7,8 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
@@ -56,5 +56,10 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return getName();
+    }
+
+    @Override
+    public String toString() {
+        return name + " ";
     }
 }
