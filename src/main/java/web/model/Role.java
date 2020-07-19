@@ -1,4 +1,6 @@
 package web.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.util.Set;
@@ -6,7 +8,6 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
-
 
     @Id
     @Column(name = "id")
@@ -53,6 +54,7 @@ public class Role implements GrantedAuthority {
         this.users = users;
     }
 
+
     @Override
     public String getAuthority() {
         return getName();
@@ -62,4 +64,6 @@ public class Role implements GrantedAuthority {
     public String toString() {
         return name + " ";
     }
+
+
 }

@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Autowired
+
     UserService userService;
 
     @Autowired

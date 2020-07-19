@@ -1,10 +1,12 @@
 package web.dao;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+import web.dto.UserDto;
 import web.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -14,8 +16,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<User> listUsers() {
-        return entityManager.createQuery("From User").getResultList();
+    public List<UserDto> listUsers() {
+        List<User> userList = entityManager.createQuery("From User").getResultList();
+        List<UserDto> userDtoList = userList
+                .stream()
+                .map(UserDto::new)
+                .collect(Collectors.toList());
+        return userDtoList;
     }
 
     @Override

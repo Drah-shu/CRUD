@@ -4,47 +4,65 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.dao.UserDao;
+import web.dto.UserDto;
 import web.model.User;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service("userService")
+@Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserDao userDao;
 
-    @Autowired
+    private RoleService roleService;
+
     private PasswordEncoder passwordEncoder;
 
-    @Transactional
+    @Autowired
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder, RoleService roleService) {
+        this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
+    }
+
+
     @Override
-    public boolean add(User user) {
+    public boolean add(UserDto userDto) {
+        User user = new User(userDto);
+        user.setRoles(Arrays.stream(userDto.getRoles()).map(roleService::getRole).collect(Collectors.toSet()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(user);
         return true;
     }
 
-    @Transactional(readOnly = true)
+
     @Override
-    public List<User> listUsers() {
+    public List<UserDto> listUsers() {
         return userDao.listUsers();
     }
 
-    @Transactional(readOnly = true)
+
     @Override
-    public User getUserById(long id) {
-        return userDao.getUserById(id);
+    public UserDto getUserById(long id) {
+        User user = userDao.getUserById(id);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        UserDto userDto = new UserDto(user);
+        return userDto;
     }
 
-    @Transactional
+
     @Override
-    public void update(User user) {
+    public void update(UserDto userDto) {
+        User user = new User(userDto);
+        user.setRoles(Arrays.stream(userDto.getRoles()).map(roleService::getRole).collect(Collectors.toSet()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.update(user);
     }
 
-    @Transactional
+
     @Override
     public void delete(long id) {
         userDao.delete(id);

@@ -21,5 +21,4 @@ public class LoggingController {
         session.invalidate();
         return "redirect:/login";
     }
-
 }

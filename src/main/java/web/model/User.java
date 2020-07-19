@@ -1,6 +1,10 @@
 package web.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import web.dto.UserDto;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
@@ -10,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -55,6 +60,16 @@ public class User implements UserDetails {
         this.email = email;
         this.roles = roles;
     }
+
+    public User(UserDto userDto) {
+        this.id = userDto.getId();
+        this.name = userDto.getUserName();
+        this.password = userDto.getPassword();
+        this.lastName = userDto.getLastName();
+        this.age = userDto.getAge();
+        this.email = userDto.getEmail();
+    }
+
 
     public String getLastName() {
         return lastName;
@@ -121,33 +136,52 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
+
 
     @Override
     public String getUsername() {
         return name;
     }
 
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
 
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
