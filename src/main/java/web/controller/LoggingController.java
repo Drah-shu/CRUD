@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/")
 public class LoggingController {
 
-    @GetMapping("hello")
-    public String getAllUsers (ModelMap model) {
+    @GetMapping("")
+    public String getAllUsers () {
         return "login";
     }
 

@@ -3,25 +3,7 @@ $(document).ready(function () {
     getAuthUser();
     clearTeble();
     addUser();
-    validatorAdd('#formAdd');
-    validatorAdd('#editUserForm')
 });
-/*
-
-function getJson3() {
-    $.getJSON("http://localhost:8080/api/get", function(result) {
-        $.each(result, function(key, value) {
-            $("#employeesJson").append(
-                value.name + " " + value.lastName + " " + value.email
-                + " " + value.password + + " " + value.age + "<br>");
-        });
-    });
-}
-
- */
-
-
-
 
     function getUsers() {
         $.ajax({
@@ -361,6 +343,8 @@ function addUser() {
     )
 }
 
+ */
+
 function validatorAdd(id) {
     $(id).validate({
         rules: {
@@ -420,6 +404,5 @@ function validatorAdd(id) {
             }
         }
     });
-};
+}
 
- */

@@ -19,7 +19,6 @@ public class UserController {
 
 
     private UserService userService;
-
     private RoleService roleService;
 
     @Autowired

@@ -19,24 +19,4 @@ public class RoleDaoImpl implements RoleDao {
     }
 
 
-    /*
-    private Session session;
-
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    @Override
-    public Role getRole(String name) {
-        session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Criteria criteria = session.createCriteria(Role.class);
-        transaction.commit();
-        Role role = ((Role) criteria.add(Restrictions.and(Restrictions.eq("name" , name))).uniqueResult());
-        session.close();
-        return role;
-    }
-
-     */
-
-
 }

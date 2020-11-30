@@ -44,91 +44,6 @@ public class HelloController {
 		modelAndView.setViewName("admin/listusers");
 		return modelAndView;
 	}
-	/*
-	@GetMapping
-	public ResponseEntity<List<User>> read() {
-		final List<User> userList = userService.listUsers();
-
-		return !userList.isEmpty() || userList != null ?
-				new ResponseEntity<>(userList, HttpStatus.OK) :
-				new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
-
-	@PostMapping
-	public ResponseEntity<?> create(@RequestBody User user) {
-		if (hasNull(user)) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		userService.add(user);
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
-
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<User> read(@PathVariable("id") Long id) {
-		User userDto = userService.getUserById(id);
-
-		return  userDto != null ?
-				new ResponseEntity<>(userDto,HttpStatus.OK) :
-				new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
-
-	@GetMapping(value = "/auth")
-	public ResponseEntity<User> getAuthUser(Authentication auth) {
-		User user = (User) auth.getPrincipal();
-
-		return  user != null ?
-				new ResponseEntity<>(user,HttpStatus.OK) :
-				new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
-
-	@PutMapping
-	public ResponseEntity<?> update(@RequestBody User user) {
-		if (hasNull(user)) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		userService.update(user);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-		userService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-
-
-	 */
-
-	/*
-
-	@PostMapping("/add")
-	public ModelAndView addUserControllerPost(@ModelAttribute("user") @Valid User user,
-											  @RequestParam(value = "rolesFromHtml") String rolesFromHtml) {
-		ModelAndView mv = new ModelAndView();
-		user.setRoles(getSetRoles(rolesFromHtml));
-		userService.add(user);
-		mv.setViewName("redirect:/admin");
-		return mv;
-	}
-
-	@PostMapping("/edit")
-	public ModelAndView editUserControllerPost(@ModelAttribute @Valid User user,
-											   @RequestParam(value = "rolesFromHtml") String rolesFromHtml) {
-		ModelAndView mv = new ModelAndView();
-		user.setRoles(getSetRoles(rolesFromHtml));
-		userService.update(user);
-		mv.setViewName("redirect:/admin");
-		return mv;
-	}
-
-	@PostMapping("/delete/{id}")
-	public String deleteUser(@PathVariable("id") Long id){
-		userService.delete(id);
-		return "redirect:/admin";
-	}
-
-	 */
 
 
 
@@ -147,16 +62,6 @@ public class HelloController {
 		return userRoles;
 	}
 
-	public boolean hasNull(User user) {
-		if (user.getName().equals("")
-				|| user.getLastName().equals("")
-				|| user.getEmail().equals("")
-				|| user.getPassword().equals("")
-				|| user.getRoles().size() == 0) {
-			return true;
-		}
-		return false;
-	}
 
 
 }
